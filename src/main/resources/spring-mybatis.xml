@@ -59,7 +59,7 @@
     </bean>
 
     <!-- 定义数据源，使用自己实现的数据源 -->
-    <bean id="dataSource" class="com.baidu.dataSource.DynamicDataSource1">
+    <bean id="dataSource" class="com.baidu.dataSource.DynamicDataSource">
         <!-- 设置多个数据源 -->
         <property name="targetDataSources">
             <map key-type="java.lang.String">
@@ -100,8 +100,13 @@
 
 
     <!-- 定义AOP切面处理器 -->
-    <bean class="com.baidu.dataSource.DataSourceAspect1" id="dataSourceAspect" />
-
+    <bean class="com.baidu.dataSource.DataSourceAspect" id="dataSourceAspect" >
+     	<!-- 指定事务策略 -->
+        <property name="txAdvice" ref="txAdvice"/>
+        <!-- 指定slave方法的前缀（非必须） -->
+        <property name="slaveMethodStart" value="query,find,get,select"/>
+    </bean>
+    
     <aop:config>
         <!-- 定义切面，所有的service的所有方法 -->
         <aop:pointcut id="txPointcut" expression="execution(* com.baidu.service.*.*(..))" />
